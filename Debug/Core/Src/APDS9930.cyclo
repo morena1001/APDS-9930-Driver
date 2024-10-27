@@ -1,0 +1,8 @@
+../Core/Src/APDS9930.c:35:9:APDS9930_Init	3
+../Core/Src/APDS9930.c:114:19:APDS9930_ReadLux	1
+../Core/Src/APDS9930.c:133:19:APDS9930_ReadProximity	1
+../Core/Src/APDS9930.c:147:19:APDS9930_ReadRegister	1
+../Core/Src/APDS9930.c:151:19:APDS9930_ReadRegisters	1
+../Core/Src/APDS9930.c:155:19:APDS9930_WriteRegister	1
+../Core/Src/APDS9930.c:163:7:Max	3
+../Core/Src/APDS9930.c:177:9:Pow	2
