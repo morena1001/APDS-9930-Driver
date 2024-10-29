@@ -22,6 +22,9 @@
 #include "stm32f3xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
+
+#include "APDS9930.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -57,7 +60,8 @@
 /* External variables --------------------------------------------------------*/
 
 /* USER CODE BEGIN EV */
-
+extern APDS9930_t dev;
+extern bool cool;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -204,7 +208,9 @@ void SysTick_Handler(void)
 void EXTI0_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI0_IRQn 0 */
-
+	if (!HAL_GPIO_ReadPin(INT_GPIO_Port, INT_Pin)) {
+		cool = true;
+	}
   /* USER CODE END EXTI0_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(INT_Pin);
   /* USER CODE BEGIN EXTI0_IRQn 1 */
