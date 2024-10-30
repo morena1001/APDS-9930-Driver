@@ -1,7 +1,7 @@
 # APDS9930 Ambient Light and Proximity Sensor 
 This driver was developed for STM32 MCUs, and specifically for the STM32F302R8. For the sensor, I used a breakout board from Keyestudio 48 in 1 Sensor Kit. 
 
-To use in non STM32F3s, the indcluded header file in line 13 of *APDS9930.h* should be changed to your version. For example, if using an STM32F4, change that file to "stm32f4xx_hal.h".
+Header file is in */Core/Inc*, and Source file is in */Core/Src*. To use in non STM32F3s, the indcluded header file in line 13 of *APDS9930.h* should be changed to your version. For example, if using an STM32F4, change that file to "stm32f4xx_hal.h".
 
 Currently, sensor intilization function only enables ambient light sensor as an interrupt, **but future updates will allow for quicker customization of initilization.**
 
