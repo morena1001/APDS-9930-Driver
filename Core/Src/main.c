@@ -114,7 +114,7 @@ int main(void)
 		  HAL_UART_Transmit (&huart2, (uint8_t *) message, 64, HAL_MAX_DELAY);
 		  cool = false;
 
-		  APDS9930_CMD_CLI_WriteRegister (&dev);
+		  APDS9930_CLI_WriteRegister (&dev);
 	  }
     /* USER CODE END WHILE */
 
@@ -261,7 +261,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 

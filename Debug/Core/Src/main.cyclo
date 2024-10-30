@@ -3,4 +3,4 @@
 ../Core/Src/main.c:174:13:MX_I2C1_Init	4
 ../Core/Src/main.c:222:13:MX_USART2_UART_Init	2
 ../Core/Src/main.c:257:13:MX_GPIO_Init	1
-../Core/Src/main.c:290:6:Error_Handler	1
+../Core/Src/main.c:289:6:Error_Handler	1

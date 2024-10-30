@@ -93,18 +93,10 @@ HAL_StatusTypeDef APDS9930_ReadProximity (APDS9930_t* device);
 /*
  * LOW LEVEL FUNCTIONS
  */
-
 HAL_StatusTypeDef APDS9930_ReadRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
-HAL_StatusTypeDef APDS9930_ReadRegisters (APDS9930_t* device, uint8_t reg, uint8_t* data, uint8_t length);
+HAL_StatusTypeDef APDS9930_WORD_ReadRegister(APDS9930_t* device, uint8_t reg, uint8_t* data);
 HAL_StatusTypeDef APDS9930_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
-
-HAL_StatusTypeDef APDS9930_CMD_ReadRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
-HAL_StatusTypeDef APDS9930_CMD_WORD_ReadRegister(APDS9930_t* device, uint8_t reg, uint8_t* data);
-HAL_StatusTypeDef APDS9930_CMD_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
-HAL_StatusTypeDef APDS9930_CMD_CLI_WriteRegister (APDS9930_t* device);
-HAL_StatusTypeDef APDS9930_CMD_WORD_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data_low, uint8_t* data_high);
-//HAL_StatusTypeDef APDS9930_ReadRegisters (APDS9930_t* device, uint8_t reg, uint8_t* data, uint8_t length);
-//
-//HAL_StatusTypeDef APDS9930_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
+HAL_StatusTypeDef APDS9930_CLI_WriteRegister (APDS9930_t* device);
+HAL_StatusTypeDef APDS9930_WORD_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data_low, uint8_t* data_high);
 
 #endif /* INC_APDS9930_H_ */
