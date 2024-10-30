@@ -53,6 +53,7 @@ uint8_t APDS9930_Init (APDS9930_t* device, I2C_HandleTypeDef* i2c_handle) {
 	uint8_t err_num = 0;
 	HAL_StatusTypeDef status;
 	uint8_t reg_data;
+	uint8_t reg_data_2;
 
 	// ENABLE : Disable and power down (p.14)
 	reg_data = 0x00;
@@ -64,12 +65,6 @@ uint8_t APDS9930_Init (APDS9930_t* device, I2C_HandleTypeDef* i2c_handle) {
 	err_num += (status != HAL_OK);
 
 	if (reg_data != APDS9930_ID_1 && reg_data != APDS9930_ID_2)	return 255;
-
-	// ENABLE : WEN, PEN, AEN, and PON are enabled. PIEN is enabled, AIEN is disabled
-//	reg_data = 0x0F;
-//	reg_data = 0x2F;
-//	status = APDS9930_WriteRegister (device, APDS9930_REG_ENABLE, &reg_data);
-//	err_num += (status != HAL_OK);
 
 	// ALS Timing Register : 1 cycle (2.73ms)
 	reg_data = 0xff;
@@ -88,18 +83,15 @@ uint8_t APDS9930_Init (APDS9930_t* device, I2C_HandleTypeDef* i2c_handle) {
 	status = APDS9930_CMD_WriteRegister (device, APDS9930_REG_WTIME, &reg_data);
 	err_num += (status != HAL_OK);
 
-	// Proximity Interrupt Threshold : low and high threshold of 0
-	reg_data = 0x00;
-	status = APDS9930_CMD_WriteRegister (device, APDS9930_REG_PILTL, &reg_data);
+	// Proximity Interrupt Low Threshold : low threshold of 0
+	reg_data = 0x01;
+	reg_data_2 = 0x02;
+	status = APDS9930_CMD_WORD_WriteRegister (device, APDS9930_REG_AILTL, &reg_data, &reg_data_2);
 	err_num += (status != HAL_OK);
 
-	status = APDS9930_CMD_WriteRegister (device, APDS9930_REG_PILTH, &reg_data);
-	err_num += (status != HAL_OK);
-
-	status = APDS9930_CMD_WriteRegister (device, APDS9930_REG_PIHTL, &reg_data);
-	err_num += (status != HAL_OK);
-
-	status = APDS9930_CMD_WriteRegister (device, APDS9930_REG_PIHTH, &reg_data);
+	// Proximity Interrupt High Threshold : high threshold of 1
+	reg_data = 0x01;
+	status = APDS9930_CMD_WORD_WriteRegister (device, APDS9930_REG_AIHTL, &reg_data, &reg_data_2);
 	err_num += (status != HAL_OK);
 
 	// Persistence Register : Every proximity cycle generates interrupt
@@ -113,6 +105,7 @@ uint8_t APDS9930_Init (APDS9930_t* device, I2C_HandleTypeDef* i2c_handle) {
 	err_num += (status != HAL_OK);
 
 	AGAIN = Pow (2, reg_data >> 2);
+	LPC = GA * DF / (ALSIT * (float) AGAIN);
 
 	// Proximity Pulse Count Register : 8 pulses (recommended p.22)
 	reg_data = 0x08;
@@ -125,7 +118,7 @@ uint8_t APDS9930_Init (APDS9930_t* device, I2C_HandleTypeDef* i2c_handle) {
 	err_num += (status != HAL_OK);
 
 	// ENABLE : WEN, PEN, AEN, and PON are enabled. PIEN is enabled, AIEN is disabled
-	reg_data = 0x2F;
+	reg_data = 0x1F;
 	status = APDS9930_CMD_WriteRegister (device, APDS9930_REG_ENABLE, &reg_data);
 	err_num += (status != HAL_OK);
 	HAL_Delay(12);
@@ -138,18 +131,22 @@ uint8_t APDS9930_Init (APDS9930_t* device, I2C_HandleTypeDef* i2c_handle) {
  */
 
 HAL_StatusTypeDef APDS9930_ReadLux (APDS9930_t* device) {
-	uint8_t raw_data[4];
+	uint8_t Ch0_raw[2];
+	uint8_t Ch1_raw[2];
 	HAL_StatusTypeDef status;
 
-	status = APDS9930_ReadRegisters (device, APDS9930_REG_Ch0DATAL, raw_data, 4);
-	Ch0_data = 256 * raw_data[1] + raw_data[0];
-	Ch1_data = 256 * raw_data[3] + raw_data[2];
+	status = APDS9930_CMD_WORD_ReadRegister (device, APDS9930_REG_Ch0DATAL, Ch0_raw);
+	if (status != HAL_OK)	return status;
+	status = APDS9930_CMD_WORD_ReadRegister (device, APDS9930_REG_Ch1DATAL, Ch1_raw);
+	if (status != HAL_OK)	return status;
 
-	IAC1 = (float) Ch0_data - B * (float ) Ch1_data;
+	Ch0_data = 256 * Ch0_raw[1] + Ch0_raw[0];
+	Ch1_data = 256 * Ch1_raw[1] + Ch1_raw[0];
+
+	IAC1 = (float) Ch0_data - B * (float) Ch1_data;
 	IAC2 = C * (float) Ch0_data - D * (float) Ch1_data;
 
 	IAC = Max (2, IAC1, IAC2);
-	LPC = GA * DF / (ALSIT * (float) AGAIN);
 
 	device->lux = IAC * LPC;
 
@@ -157,11 +154,11 @@ HAL_StatusTypeDef APDS9930_ReadLux (APDS9930_t* device) {
 }
 
 HAL_StatusTypeDef APDS9930_ReadProximity (APDS9930_t* device) {
-	uint8_t raw_data[2];
+	uint8_t raw[2];
 	HAL_StatusTypeDef status;
 
-	status = APDS9930_ReadRegisters (device, APDS9930_REG_PDATAL, raw_data, 2);
-	device->prox = 256 * raw_data[1] + raw_data[0];
+	status = APDS9930_CMD_WORD_ReadRegister (device, APDS9930_REG_PDATAL, raw);
+	device->prox = 256 * raw[1] + raw[0];
 
 	return status;
 }
@@ -184,6 +181,8 @@ HAL_StatusTypeDef APDS9930_WriteRegister (APDS9930_t* device, uint8_t reg, uint8
 
 
 
+
+
 HAL_StatusTypeDef APDS9930_CMD_ReadRegister (APDS9930_t* device, uint8_t reg, uint8_t* data) {
 	uint8_t cmd = APDS9930_REG_COMMAND_REPEAT + reg;
 
@@ -193,24 +192,46 @@ HAL_StatusTypeDef APDS9930_CMD_ReadRegister (APDS9930_t* device, uint8_t reg, ui
 	return HAL_I2C_Master_Receive (device->i2c_handle, APDS9930_I2C_ADDR, data, 1, HAL_MAX_DELAY);
 }
 
-HAL_StatusTypeDef APDS9930_CMD_ReadRegisters (APDS9930_t* device, uint8_t reg, uint8_t* data, uint8_t length) {
-	uint8_t cmd = APDS9930_REG_COMMAND_AUTO_INC + reg;
+
+
+HAL_StatusTypeDef APDS9930_CMD_WORD_ReadRegister (APDS9930_t* device, uint8_t reg, uint8_t* data) {
+	uint8_t cmd = APDS9930_REG_COMMAND_REPEAT + reg;
 
 	if (HAL_I2C_Master_Transmit (device->i2c_handle, APDS9930_I2C_ADDR, &cmd, 1, HAL_MAX_DELAY)
 			!= HAL_OK)	return HAL_ERROR;
 
-	return HAL_I2C_Master_Receive (device->i2c_handle, APDS9930_I2C_ADDR, data, 1, HAL_MAX_DELAY);
+	return HAL_I2C_Master_Receive (device->i2c_handle, APDS9930_I2C_ADDR, data, 2, HAL_MAX_DELAY);
 }
 
-HAL_StatusTypeDef APDS9930_CMD_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data) {
-//	uint16_t cmd = ((APDS9930_REG_COMMAND_REPEAT + reg) << 8) + (*data);
 
+
+HAL_StatusTypeDef APDS9930_CMD_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data) {
 	uint8_t cmd[2] = {
 			APDS9930_REG_COMMAND_REPEAT + reg,
 			(*data)
 	};
 
 	return HAL_I2C_Master_Transmit (device->i2c_handle, APDS9930_I2C_ADDR, cmd, 2, HAL_MAX_DELAY);
+}
+
+
+
+HAL_StatusTypeDef APDS9930_CMD_CLI_WriteRegister (APDS9930_t* device) {
+	uint8_t cmd = APDS9930_REG_COMMAND_CLI;
+
+	return HAL_I2C_Master_Transmit (device->i2c_handle, APDS9930_I2C_ADDR, &cmd, 1, HAL_MAX_DELAY);
+}
+
+
+
+HAL_StatusTypeDef APDS9930_CMD_WORD_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data_low, uint8_t* data_high) {
+	uint8_t cmd[3] = {
+			APDS9930_REG_COMMAND_AUTO_INC + reg,
+			(*data_low),
+			(*data_high)
+	};
+
+	return HAL_I2C_Master_Transmit (device->i2c_handle, APDS9930_I2C_ADDR, cmd, 3, HAL_MAX_DELAY);
 }
 
 /*

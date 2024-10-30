@@ -113,6 +113,8 @@ int main(void)
 		  sprintf (message, "lux: %.2f\r\nprox: %.2f\r\n\n", dev.lux, dev.prox);
 		  HAL_UART_Transmit (&huart2, (uint8_t *) message, 64, HAL_MAX_DELAY);
 		  cool = false;
+
+		  APDS9930_CMD_CLI_WriteRegister (&dev);
 	  }
     /* USER CODE END WHILE */
 

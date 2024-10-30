@@ -26,6 +26,8 @@
 
 #define APDS9930_REG_COMMAND_REPEAT		0x80
 #define APDS9930_REG_COMMAND_AUTO_INC	0xA0
+#define APDS9930_REG_COMMAND_CLI		0xE7
+
 #define APDS9930_REG_ENABLE				0x00
 #define APDS9930_REG_ATIME				0x01
 #define APDS9930_REG_PTIME				0x02
@@ -97,8 +99,10 @@ HAL_StatusTypeDef APDS9930_ReadRegisters (APDS9930_t* device, uint8_t reg, uint8
 HAL_StatusTypeDef APDS9930_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
 
 HAL_StatusTypeDef APDS9930_CMD_ReadRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
-HAL_StatusTypeDef APDS9930_CMD_ReadRegisters (APDS9930_t* device, uint8_t reg, uint8_t* data, uint8_t length);
+HAL_StatusTypeDef APDS9930_CMD_WORD_ReadRegister(APDS9930_t* device, uint8_t reg, uint8_t* data);
 HAL_StatusTypeDef APDS9930_CMD_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
+HAL_StatusTypeDef APDS9930_CMD_CLI_WriteRegister (APDS9930_t* device);
+HAL_StatusTypeDef APDS9930_CMD_WORD_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data_low, uint8_t* data_high);
 //HAL_StatusTypeDef APDS9930_ReadRegisters (APDS9930_t* device, uint8_t reg, uint8_t* data, uint8_t length);
 //
 //HAL_StatusTypeDef APDS9930_WriteRegister (APDS9930_t* device, uint8_t reg, uint8_t* data);
