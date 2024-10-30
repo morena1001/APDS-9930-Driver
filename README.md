@@ -37,9 +37,6 @@ This section includes the pins connected to the sensor .ioc file configurations.
 
 **NVIC**
 - EXTI line0 interrupt is *Enabled*
- 
-**RCC**
-- HSE is set to *Crystal/Ceramic Resonator* **DO NOT YET KNOW IF NOT NEEDED FOR SENSOR TO FUNCTION PROPERLY**
 
 **SYS**
 - Debug is set to *Serial Wire*
@@ -51,8 +48,10 @@ This section includes the pins connected to the sensor .ioc file configurations.
 
 **USART 2** **OPTIONAL**
 - Mode is *Asynchronous*
-    
 
+**Version History
+- Initial final product
+- Removed High Speed Clock, not needed
 
 ## License Information
 This project is **open source**.
