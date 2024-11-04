@@ -49,7 +49,7 @@ This section includes the pins connected to the sensor .ioc file configurations.
 **USART 2** **OPTIONAL**
 - Mode is *Asynchronous*
 
-**Version History
+## Version History
 - Initial final product
 - Removed High Speed Clock, not needed
 
