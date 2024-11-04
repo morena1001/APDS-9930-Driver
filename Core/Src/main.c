@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "APDS9930.h"
 /* USER CODE END Includes */
@@ -114,7 +115,7 @@ int main(void)
 		  HAL_UART_Transmit (&huart2, (uint8_t *) message, 64, HAL_MAX_DELAY);
 		  cool = false;
 
-		  APDS9930_CLI_WriteRegister (&dev);
+		  APDS9930_CLI_WriteRegister (&dev, APDS9930_REG_COMMAND_CLI);
 	  }
     /* USER CODE END WHILE */
 
