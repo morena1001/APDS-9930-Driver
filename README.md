@@ -14,6 +14,7 @@ This section includes the pins connected to the sensor .ioc file configurations.
 
 | STM32 Pin   | APDS9930 Pin | Function    |
 | ----------- | -----------  | ----------- |
+| 3.3VL       | 3.3V         | LED Power   |
 | 3.3V        | 3.3V         | Power       |
 | GND         | GND          | Ground      |
 | PB7         | SDA          | I^2^C Data  |
@@ -52,6 +53,9 @@ This section includes the pins connected to the sensor .ioc file configurations.
 ## Version History
 - Initial final product
 - Removed High Speed Clock, not needed
+- Better configuration capabilities
+- 3.3VL for LED power was needed after all
+- Fixed Prox threshold setting issues
 
 ## License Information
 This project is **open source**.
