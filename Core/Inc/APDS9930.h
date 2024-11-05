@@ -103,13 +103,13 @@
 #define APDS9930_DEFAULT_ATIME			0xff // 1 cycle (2.73 ms)
 #define APDS9930_DEFAULT_PTIME			0xff // 1 cycle (2.73 ms)
 #define APDS9930_DEFAULT_WTIME			0xff // 1 cycle (2.73 ms)
-#define APDS9930_DEFAULT_PILTx			0x0000 // Low treshold of 0
-#define APDS9930_DEFAULT_PIHTx			0x0001 // High treshold of 1
+#define APDS9930_DEFAULT_PILTx			0x0000 // Low threshold of 0
+#define APDS9930_DEFAULT_PIHTx			0x0032 // High threshold of 1
 #define APDS9930_DEFAULT_PERS			0x00 // Every proximity cycle generates an interrupt
 #define APDS9930_DEFAULT_CONFIG			0x00 // AGL, WLONG, and PDL are not asserted
 #define APDS9930_DEFAULT_PPULSE			0x08 // 8 pulses (recommended in p.22)
 #define APDS9930_DEFAULT_CONTROL		0x20 // 100mA LED strength, proximity uses Ch1 diode, 1x proximity gain, 1x ALS gain
-#define APDS9930_DEFAULT_ENABLE			0x1F // PIEN, WEN, PEN, AEN, and PON are enabled. SAI and AIEN are disabled		
+#define APDS9930_DEFAULT_ENABLE			0x2F // PIEN, WEN, PEN, AEN, and PON are enabled. SAI and AIEN are disabled
 
 
 /*

@@ -55,7 +55,6 @@ uint8_t APDS9930_Init (APDS9930_t* device, I2C_HandleTypeDef* i2c_handle) {
 	uint8_t err_num = 0;
 	HAL_StatusTypeDef status;
 	uint8_t reg_data;
-//	uint8_t reg_data_2;
 	uint16_t reg_data_WORD;
 
 	// ENABLE
@@ -87,18 +86,15 @@ uint8_t APDS9930_Init (APDS9930_t* device, I2C_HandleTypeDef* i2c_handle) {
 	err_num += (status != HAL_OK);
 
 	// Proximity Interrupt Low Threshold
-	// reg_data = 0x00;
-	// reg_data_2 = 0x00;
 	reg_data_WORD = APDS9930_DEFAULT_PILTx;
 	// status = APDS9930_WORD_WriteRegister (device, APDS9930_REG_PILTL, &reg_data, &reg_data_2);
 	status = APDS9930_WORD_WriteRegister_2 (device, APDS9930_REG_PILTL, &reg_data_WORD);
 	err_num += (status != HAL_OK);
 
 	// Proximity Interrupt High Threshold
-	// reg_data = 0x01;
 	reg_data_WORD = APDS9930_DEFAULT_PIHTx;
 	// status = APDS9930_WORD_WriteRegister (device, APDS9930_REG_PIHTL, &reg_data, &reg_data_2);
-	status = APDS9930_WORD_WriteRegister_2 (device, APDS9930_REG_PILTL, &reg_data_WORD);
+	status = APDS9930_WORD_WriteRegister_2 (device, APDS9930_REG_PIHTL, &reg_data_WORD);
 	err_num += (status != HAL_OK);
 
 	// Persistence Register
@@ -319,8 +315,8 @@ HAL_StatusTypeDef APDS9930_WORD_WriteRegister (APDS9930_t* device, uint8_t reg, 
 HAL_StatusTypeDef APDS9930_WORD_WriteRegister_2 (APDS9930_t* device, uint8_t reg, uint16_t* data) {
 	uint8_t cmd[3] = {
 			APDS9930_REG_COMMAND_AUTO_INC + reg,
-			(*data) & 15,
-			(*data) >> 4
+			(*data) & 0xFF,
+			(*data) >> 0x08
 	};
 
 	return HAL_I2C_Master_Transmit (device->i2c_handle, APDS9930_I2C_ADDR, cmd, 3, HAL_MAX_DELAY);

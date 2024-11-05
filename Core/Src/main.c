@@ -111,11 +111,12 @@ int main(void)
 		  APDS9930_ReadLux (&dev);
 		  APDS9930_ReadProximity (&dev);
 
-		  sprintf (message, "lux: %.2f\r\nprox: %.2f\r\n\n", dev.lux, dev.prox);
+//		  sprintf (message, "lux: %.2f\r\nprox: %.2f\r\n\n", dev.lux, dev.prox);
+		  sprintf (message, "prox: %.2f\r\n\n", dev.prox);
 		  HAL_UART_Transmit (&huart2, (uint8_t *) message, 64, HAL_MAX_DELAY);
 		  cool = false;
 
-		  APDS9930_CLI_WriteRegister (&dev, APDS9930_REG_COMMAND_CLI);
+		  APDS9930_CLI_WriteRegister (&dev, APDS9930_REG_COMMAND_PROX_CLI);
 	  }
     /* USER CODE END WHILE */
 
